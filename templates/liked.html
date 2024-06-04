@@ -171,10 +171,12 @@
                     });
                     document.getElementById('unselect-all').style.display = 'none';
 
+                    var resultList = document.getElementById('result-list');
+                    resultList.innerHTML = '';
+
                     if (data.modifiedData.length > 0){
                         // Display the modified list in the popup
-                        var resultList = document.getElementById('result-list');
-                        resultList.innerHTML = '';
+                        
                         data.modifiedData.forEach(item => {
                             console.log(item)
                             // const li = document.createElement('li');
@@ -226,6 +228,15 @@
                         document.querySelector('.popup p').textContent = '';
                         
                     }
+
+                    else{
+                        resultList.innerHTML += '<p> ai isnt working sorry , maybe try some other movies or try later? </p>';
+                        // Hide the loader and show the results
+                        
+                        document.querySelector('.load').style.display = 'none';
+                        // document.getElementById('loader').disabled = true;
+                        document.querySelector('.popup p').textContent = '';
+                    }
                 })
                 .catch((error) => {
                     console.error('Error:', error);
@@ -257,6 +268,9 @@
                 document.querySelector('.load').style.display = 'block';
                 document.querySelector('.popup p').textContent = 'Generating recommendations...';
                 document.getElementById('result-list').innerHTML = '';
+                document.querySelectorAll('.movie-checkbox').forEach(function(checkbox) {
+                    checkbox.checked = false;
+                });
             });
 
             // Close the popup when clicking outside of it
@@ -266,6 +280,9 @@
                     document.querySelector('.load').style.display = 'block';
                     document.querySelector('.popup p').textContent = 'Generating recommendations...';
                     document.getElementById('result-list').innerHTML = '';
+                    document.querySelectorAll('.movie-checkbox').forEach(function(checkbox) {
+                        checkbox.checked = false;
+                    });
                 }
             });
         
