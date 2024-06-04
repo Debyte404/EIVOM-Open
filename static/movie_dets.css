@@ -1,0 +1,44 @@
+/* styles.css */
+
+.circle {
+    position: absolute;
+    width: 30vw;
+    height: 30vw;
+    max-height: 300px;
+    max-width: 300px;
+    background-color: transparent;
+    backdrop-filter: blur(3px);
+    border: 1px solid #ffffff70;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+    padding: 25px;
+    box-sizing: border-box;
+    transition: ease-in-out 0.4s;
+    margin: 10px;
+    bottom: 0;
+}
+
+.circle p {
+    margin: 0;
+    /* font-size: 20px; */
+    font-size: 1.6vw;
+    line-height: 1.5;
+    color: #fff;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 5; /* Number of lines to show */
+    -webkit-box-orient: vertical;
+    transition: ease-in-out 0.3s;
+}
+
+.circle:hover,.circle:active{
+    border-radius: 15px;
+    max-width: 65%;
+    width: 65%;
+    text-align: justify;
+}

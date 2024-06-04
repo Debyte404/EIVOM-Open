@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" media="screen" href="https://fontlibrary.org//face/jellee-typeface" type="text/css"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='movie_dets.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>{{ movie['Title'] }}</title>
+    <style>
+        .title_name{
+            position: absolute;
+            text-align:center;
+            font-size: 1.9vw;
+            font-family: Comic Sans MS;
+            top:0;
+            
+            left: 50%;
+            width: 100%;
+            transform: translate(-50%, 0);
+            color: #0093b8;
+        }
+
+        @media only screen and (max-width: 430px) {
+            .title_name{
+                top:10%;
+            }
+
+        }
+
+        .badge{
+            position: absolute;
+            border: 3px solid #eeff00;
+            padding: 2px;
+            margin: 10px;
+            left : 0;
+            align-self: center;
+            justify-self: center;
+            border-radius: 10px;
+            max-width: 30%;
+            width: auto;
+            height: auto;
+            max-height: 90%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+        }
+
+        .badge img.a{
+            
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+
+        }
+
+        .mhmm{
+            position: absolute;
+            display: flex;
+            justify-content: spaced evenly;
+            align-items: flex-start;
+            background-color: transparent;
+            flex-flow: row wrap;
+            top:16%;
+            /* margin-top: 150px; */
+            left:33%;
+            /* transform: translate(-50%,0); */
+            position: absolute;
+            width: 55%;
+            
+            max-height: 40%;
+            padding: 10px;
+            backdrop-filter: blur(5px);
+            margin: 10px;
+        }
+
+        @media only screen and (max-width: 915px) {
+            .mhmm {
+                top:15%
+            }
+
+            .badge {
+                top:19%;
+            }
+        }
+
+        .dec{
+            /* position: absolute; */
+            background-color: rgb(255, 213, 0);
+            border:1px solid #eeff00;
+            padding: 10px;
+            border-radius: 10px;
+            margin: 15px;
+            font-size: 1.8vw;
+            color: #19161c;
+        }
+
+        body{
+            /* color: white; */
+            font-family: 'Promt', sans-serif;
+            background-color: #19161c;
+            margin: 0;
+            padding: 0;
+            /* height: 100%; */
+            background-color: #19161c;
+            background: linear-gradient(135deg, #252525, #070707);
+            background-size: cover;
+            /* background-repeat: repeat-y; */
+            background-attachment: fixed;
+            overflow: auto;
+
+            display: flex;
+            /* overflow: hidden; */
+            justify-content: flex-end !important;
+            align-items: flex-end !important;
+            height: 100vh;
+
+            /* background-color: #ec0000; */
+        }
+
+        #particles-js{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        
+        html::-webkit-scrollbar {
+            width: 12px;
+        }
+        
+        html::-webkit-scrollbar-track {
+            border-radius: 8px;
+            background-color: #95a5a6;
+            border: 1px solid #cacaca;
+        }
+        
+        html::-webkit-scrollbar-thumb {
+            border-radius: 8px;
+            background-color: #2c3e50;
+        }
+        html {
+            scrollbar-width: thin; /* 'auto' or 'thin' for Firefox */
+            scrollbar-color: #2c3e50 #95a5a6; /* thumb and track color */
+        }
+
+        .back-icon {
+            position: fixed; /* or 'absolute' if within a positioned parent container */
+            top: 10px;
+            left: 10px;
+            z-index: 1000; /* High z-index to ensure it's above other elements */
+            
+        }
+
+        .save{
+            position: absolute;
+            top:105%;
+            color:white;
+            /* font-size: 1.3vw; */
+            height: 50px;
+            width: auto;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+    <div class="back-icon">
+        <a href="/"><i class="fa fa-arrow-left fa-2x" aria-hidden="true" style="color: yellow"></i></a>
+    </div>
+    
+    <div class="badge">
+        <img class="a" src="{{ movie['Poster'] }}" alt="Movie Poster">
+
+        <img id='book' src="{{ url_for('static',filename='bookmark_not_selected.svg')}}" class="save" alt="Bookmark" onclick="selectMovie()">
+        <script>
+
+            var booked = "{{ url_for('static',filename='bookmark_selected.svg')}}"
+            var not_booked = "{{ url_for('static',filename='bookmark_not_selected.svg')}}"
+
+            var show = "{{ show }}"
+
+            if (show == "True"){
+                document.getElementById('book').src = booked;
+            }
+            else{
+                document.getElementById('book').src = not_booked;
+            }
+
+
+            function selectMovie() {
+                // console.log(isLoggedIn);
+                if (isLoggedIn != 'True') {
+                    alert('You need to be logged in to add movies to favorites!');
+                    console.log('You need to login')
+                    return; // Stop the function if the user is not logged in
+                }   
+                
+                else{
+                // console.log(isLoggedIn)
+    
+                    var movieId = "{{ movie['imdbID'] }}";
+                    
+                    document.getElementById('book').src = booked;
+
+                    $.ajax({
+                        url: '/select_movie',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ movie_id: movieId }),
+                        success: function(response) {
+                            console.log('Movie selected:', movieId);
+
+                        }
+                    });
+                    
+                }
+            }
+        </script>
+    </div>
+    <div class="title_name">
+        <h1 >{{ movie['Title'] }}</h1>
+    </div>
+
+    <div class="mhmm">
+        <p class="dec"><strong>Release Date:</strong> {{ movie['Released'] }}</p>
+        <p class="dec">{{ movie['imdbRating'] }} <span style="color: rgb(30, 0, 255);"><i class="fa fa-star" aria-hidden="true"></i></span></p>
+        <p class="dec">{{ movie['Rated'] }}</p>
+        <p class="dec"><strong>Director:</strong> {{ movie['Director'] }}</p>
+        <p class="dec"><strong>Genres:</strong> {{ movie['Genre'] }}</p>
+        <p class="dec"><i class="fa fa-money" style="color: darkgreen;font-size: 2vw;"></i> {{ movie['BoxOffice'] }}</p>
+    </div>
+
+    <div class="circle">
+        <p>{{ movie['Plot'] }}</p>
+    </div>
+
+    <div class="navbar">
+        <div class="dropdown">
+            <button class="dropbtn">
+                <!-- <i class="fa fa-caret-down"></i> -->
+                <img class="menu-icon" src="https://sdl-stickershop.line.naver.jp/products/0/0/1/1075960/android/stickers/3130147.png;compress=true" alt="😸">
+            </button>
+            <div class="dropdown-content" id="dropdown-content">
+                <a href="{{ url_for('home') }}">Home</a>
+                <a href="{{ url_for('login') }}">Login</a>
+                <a href="{{ url_for('register') }}">Register</a>
+
+            </div>
+        </div> 
+    </div>
+
+
+
+    <script>
+        var isLoggedIn = '{{user.is_authenticated}}';
+    </script>
+
+    <script>
+        var dropdown=document.getElementById("dropdown-content");
+        if (isLoggedIn == 'True'){
+            dropdown.innerHTML += "<a href='"+"{{url_for('profile')}}"+"'>Profile</a>";
+            dropdown.innerHTML += "<a href='"+"{{url_for('liked')}}"+"'>Liked ❤</a>";
+            dropdown.innerHTML += "<a href='"+"{{url_for('logout')}}"+"'>Logout</a>";
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        particlesJS('particles-js', {
+            "particles": {
+                "number": {
+                    "value": 80,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#ffffff"
+                },
+                "shape": {
+                    "type": "circle",
+                    "stroke": {
+                        "width": 0,
+                        "color": "#000000"
+                    },
+                    "polygon": {
+                        "nb_sides": 5
+                    },
+                    "image": {
+                        "src": "img/github.svg",
+                        "width": 100,
+                        "height": 100
+                    }
+                },
+                "opacity": {
+                    "value": 0.5,
+                    "random": false,
+                    "anim": {
+                        "enable": false,
+                        "speed": 1,
+                        "opacity_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "size": {
+                    "value": 3,
+                    "random": true,
+                    "anim": {
+                        "enable": false,
+                        "speed": 40,
+                        "size_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": false,
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 6,
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": {
+                        "enable": false,
+                        "rotateX": 600,
+                        "rotateY": 1200
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "repulse"
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    },
+                    "resize": true
+                },
+                "modes": {
+                    "grab": {
+                        "distance": 400,
+                        "line_linked": {
+                            "opacity": 1
+                        }
+                    },
+                    "bubble": {
+                        "distance": 400,
+                        "size": 40,
+                        "duration": 2,
+                        "opacity": 8,
+                        "speed": 3
+                    },
+                    "repulse": {
+                        "distance": 200,
+                        "duration": 0.4
+                    },
+                    "push": {
+                        "particles_nb": 4
+                    },
+                    "remove": {
+                        "particles_nb": 2
+                    }
+                }
+            },
+            "retina_detect": true
+        });
+    </script>
+</body>
+</html>

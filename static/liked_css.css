@@ -1,0 +1,210 @@
+.content {
+    position: absolute;
+    display: flex;
+    width: calc(95% - 250px);
+    margin-left: calc(250px + 2%);
+    margin-top: calc(70px + 2%);
+    /* height: calc(80%-70px); */
+    height: 84.5%;
+    background-color:transparent;
+    flex-direction: column;
+    overflow: hidden;
+
+}
+
+.blury_end {
+    /* display: flex; */
+    position: absolute;
+    height: 60px;
+    width: 100%;
+    bottom: 0;
+    background:transparent;
+
+}
+
+.blury_end::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: inherit; /* Inherit the semi-transparent background */
+    backdrop-filter: blur(10px); /* Apply blur effect */
+    mask-image: linear-gradient(to bottom, transparent, rgb(99, 99, 99)); /* Gradient mask */
+  }
+
+.scrollable {
+    overflow-y: auto; /* Enables vertical scrolling */
+    max-height: 100%; /* Ensures the scrollable area does not exceed the container */
+    overflow-x: hidden;
+  }
+
+.movie_card {
+    position: relative;
+    display: flex;
+    width: 100%;
+    background-color: rgb(200, 245, 255);
+    margin-top: 10px;
+    margin-bottom: 10px;
+    height: 160px;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.5s ease, opacity 0.5s ease;
+    /* overflow-y: hidden; */
+}
+
+.remove-item {
+    transform: translateX(100%);
+    opacity: 0;
+}
+
+.movie_card img {
+    float: left;
+    height: 100%;
+    width: auto;
+    border-radius: 5px;
+}
+
+.info_syz{
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    margin-left: 10px;
+}
+
+.info_syz h1 {
+    color: rgb(0, 30, 16);
+    font-family: Comic Sans MS;
+    font-size: 24px;
+    margin-bottom: 68px;
+    
+}
+.info_syz h2 {
+    
+    margin-top: 10px;
+    font-size:18px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.movie_card button{
+    border: none;
+    position: absolute;
+    /* float: right; */
+    right:0;
+    margin-right: 60px;
+    font-size:42px;
+    background: transparent;
+    border-radius: 50%;
+    align-self: center;
+    justify-self: center;
+    cursor: pointer;
+}
+
+.button_Close{
+    color: red;
+}
+
+.button_Close:hover{
+    color: white;
+}
+
+.movie_card input{
+    cursor: pointer;
+    position: absolute;
+    /* float: right; */
+    right:0;
+    width: 34px;
+    height: 34px;
+    margin-right: 150px;
+    align-self: center;
+    justify-self: center;
+    background: #2c3e50;
+}
+
+
+.scrollable::-webkit-scrollbar {
+    width: 12px;
+}
+
+.scrollable::-webkit-scrollbar-track {
+    border-radius: 8px;
+    background-color: #95a5a6;
+    border: 1px solid #cacaca;
+}
+
+.scrollable::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background-color: #2c3e50;
+}
+.scrollable {
+    scrollbar-width: thin; /* 'auto' or 'thin' for Firefox */
+    scrollbar-color: #2c3e50 #95a5a6; /* thumb and track color */
+}
+
+.ai_butt{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align:center;
+    flex-direction: column;
+    color:navy;
+    background: none;
+    padding:5px;
+    position: absolute;
+    /* outline: none; */
+    border: none;
+    /* margin-top:80px; */
+    /* top:220%; */
+    bottom: -200%;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+}
+
+.ai_butt:hover{
+    background-color: rgba(0, 222, 85, 0.17);
+}
+
+.ai_butt img{
+    width:140px;
+    height: auto;
+}
+
+.option_subcontainer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    width: 100%;
+}
+
+.select_all{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align:center;
+    flex-direction: row;
+    color:navy;
+    background: none;
+    padding:5px;
+    cursor: pointer;
+    border: none;
+    background-color: #30669cd2;
+    opacity: 0.8;
+    border-radius: 20px;
+}
+.select_all:hover{
+    background-color: rgba(0, 222, 85, 0.17);
+}
+
+.select_all img{
+    width: 30px;
+    height: auto;
+}
+
+.unselect_all{
+    display: none;
+    border: none;
+    background: none;
+}

@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <link rel="stylesheet" media="screen" href="https://fontlibrary.org//face/jellee-typeface" type="text/css"/>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <title>Trending Right now</title>
+    <style>
+
+        .selected-overlay {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 255, 0, 0.5);
+            color: white;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+        }
+
+        .selected {
+            border-color: green; /* Green border for selected card */
+        }
+
+        .movies-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            /* flex-basis: content; */
+            
+        }
+        .movie-card {
+            border: 2px solid #eeff00;
+            padding-left: 5px;
+            padding-right: 5px;
+            padding-top: 3px;
+            margin: 5px;
+            border-radius: 5px;
+            text-align: center;
+            /* width: calc(10% - 20px); Adjust width to fit 10 items per row, accounting for margin
+             */
+            width: 140px;
+            box-sizing: border-box;
+            /*height: 288px; /* Fixed height to keep all cards the same size */
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+            position: relative; /* Needed for absolute positioning of the title overlay */
+            backdrop-filter: blur(5px);
+            opacity: 0.9;
+            background-color: #91f0ff2a;
+        }
+        .movie-card h2 {
+            font-size: 16px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-top: 3px;
+            margin-bottom: 8px;
+        }
+        .movie-card img {
+            width: 100%;
+        
+            height: auto;
+            padding-top: 2px;
+            max-height: 300px; /* Adjust based on your preference */
+            object-fit: cover; /* This makes sure the image covers the area, might crop */
+        }
+        .movie-info {
+            margin-top: 5px; /* Pushes the info to the bottom of the card */
+            line-height: 5px;
+        }
+        .full-title {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(19, 19, 18, 0.893);
+            color: white;
+            padding: 5px;
+            font-size: 16px;
+            overflow-wrap: break-word;
+            box-sizing: border-box;
+            border-radius: 5px;
+        }
+        .movie-card:hover .full-title {
+            display: block;
+        }
+
+        
+        body{
+            position:relative;
+            margin-top: 60px; 
+            padding: 0;
+            color: #ffffff;
+
+            background-color: #19161c;
+            background: linear-gradient(135deg, #2dd3f0, #0717f8);
+            background-size: cover;
+            /* background-repeat: repeat-y; */
+            background-attachment: fixed;
+            overflow: hidden;
+
+            /* height: 100vh; */
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center!important;
+            flex-direction: column;
+            align-content: center;
+            user-select: none;
+            font-family: 'promt', sans-serif;
+            overflow-y: visible;
+        }
+
+        .overlay {
+            position: fixed;
+            
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: -2;
+        }
+
+        #particles-js{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* z-index: -1; */
+        }
+
+        .box{
+            position: relative;
+            top: -9px;
+            /* position: absolute;
+            top: 0px; */
+
+        }
+
+        .input {
+            padding: 10px;
+            width: 80px;
+            height: 80px;
+            background: none;
+            border: 4px solid #ffd52d;
+            border-radius: 50px;
+            box-sizing: border-box;
+            font-family: Comic Sans MS;
+            font-size: 26px;
+            color: #ffd52d;
+            outline: none;
+            transition: .5s;
+        }
+        .box:hover input{
+            width: 350px;
+            background: #3b3640;
+            border-radius: 10px;
+        }
+        .box i{
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translate(-50%,-50%);
+            font-size: 26px;
+            color: #ffd52d;
+            transition: .2s;
+        }
+        .box:hover i{
+            opacity: 0;
+            z-index: -1;
+        }
+
+        .instruction{
+            position: absolute;
+            /* border:1px solid #780303; */
+            /* padding: 5px; */
+            top: 0;
+            left: 0;
+            margin: 10px;
+            /* border-radius: 10px; */
+            /* align-self: left;
+            width: 95%; */
+        }
+
+        .stickers{
+            /* position: fixed;
+            top: -4%;
+            right:-20%; */
+            /* margin-top: 10; */
+            /* margin-right: 20; */
+            transform: scale(0.3);
+            /* z-index: 100; */
+        }
+
+        .info-icon {
+            position: fixed; /* or 'absolute' if within a positioned parent container */
+            top: 10px;
+            left: 10px;
+            z-index: 1000; /* High z-index to ensure it's above other elements */
+        }
+
+        .tooltip-text {
+            display: none; /* Hide tooltip by default */
+            position: absolute;
+            top: 100%; /* Position below the icon */
+            left: 0;
+            background-color: black;
+            color: white;
+            padding: 5px;
+            border-radius: 4px;
+            white-space: nowrap; /* Prevents the text from wrapping */
+            z-index: 1000; /* Ensure the tooltip is above other content */
+        }
+
+        .info-icon:hover .tooltip-text {
+            display: block; /* Show tooltip on hover */
+        }
+
+
+        html::-webkit-scrollbar {
+            width: 12px;
+        }
+        
+        html::-webkit-scrollbar-track {
+            border-radius: 8px;
+            background-color: #95a5a6;
+            border: 1px solid #cacaca;
+        }
+        
+        html::-webkit-scrollbar-thumb {
+            border-radius: 8px;
+            background-color: #2c3e50;
+        }
+        html {
+            scrollbar-width: thin; /* 'auto' or 'thin' for Firefox */
+            scrollbar-color: #2c3e50 #95a5a6; /* thumb and track color */
+        }
+
+        .loading {
+            /* display: none; */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #07f8dc;
+            z-index: 10;
+        }
+
+        .loading_overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(34, 34, 34, 0.5);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 8;
+        }
+
+    </style>
+
+</head>
+<body>
+    <div id="particles-js"></div>
+    <div class="overlay"></div>
+
+    <h1 style="text-align:center; font-size:23px; font-weight: bold;">Trending This Week</h1>
+  
+    <div class="navbar">
+        <div class="dropdown">
+            <button class="dropbtn">
+                <!-- <i class="fa fa-caret-down"></i> -->
+                <img class="menu-icon" src="https://sdl-stickershop.line.naver.jp/products/0/0/1/1075960/android/stickers/3130147.png;compress=true" alt="😸">
+            </button>
+            <div class="dropdown-content" id="dropdown-content">
+                <a href="{{ url_for('home') }}">Home</a>
+                <a href="{{ url_for('login') }}">Login</a>
+                <a href="{{ url_for('register') }}">Register</a>
+                
+                <!-- <span>login</span> -->
+                <!-- <span>register</span> -->
+            </div>
+        </div> 
+    </div>
+
+    <div class="info-icon">
+        <i class="fas fa-info-circle fa-3x"></i>
+        <span class="tooltip-text">Left-click or Tap: add to liked<br>Right-click or Press & Hold: Go to details</span>
+    </div>
+
+    <!-- <div class="stickers">
+        <img src="https://sdl-stickershop.line.naver.jp/products/0/0/1/1075960/android/stickers/3130147.png;compress=true" alt="😸">
+    </div> -->
+
+    <div class="box">
+        <form name="search" method="POST" action="/" onsubmit="submitForm()">
+            <input type="text" class="input" name="search_query" id="pointmhm" onmouseout="this.value = ''; this.blur();">
+        </form>
+        <i class="fas fa-search"></i>
+    
+    </div>
+
+    <div class="loading_overlay" id="loader">
+        <div class="loading" id="loader">
+            <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+        </div>
+    </div>
+
+    <script>
+        function submitForm() {
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('pointmhm').blur();
+            console.log('Loading');
+        }
+    </script>
+
+    <div class="movies-container">
+        {% for movie in movies %}
+            <div class="movie-card" data-id="{{ movie['imdb_id'] }}" onclick="selectMovie(this)" oncontextmenu="showDetails(event, this)">
+                <div class="full-title" >{{ movie['title'] }}</div>
+                <h2>{{ movie['title'] }}</h2>
+                <div class="selected-overlay">&#10003;</div>
+                <img src="https://image.tmdb.org/t/p/w500{{ movie['poster_path'] }}" alt="Movie Poster">
+                <div class="movie-info">
+                    <p>{{ movie['release_date'] }}</p>
+                    <p>Rating: {{ movie['vote_average'] }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    
+    <script>
+        var isLoggedIn = '{{user_agent.is_authenticated}}';
+    </script>
+
+    <script>
+        var dropdown=document.getElementById("dropdown-content");
+        if (isLoggedIn == 'True'){
+            dropdown.innerHTML += "<a href='"+"{{url_for('profile')}}"+"'>profile</a>";
+            dropdown.innerHTML += "<a href='"+"{{url_for('liked')}}"+"'>Liked ❤</a>";
+            dropdown.innerHTML += "<a href='"+"{{url_for('logout')}}"+"'>logout</a>";
+        }
+    </script>
+
+    <script>
+        // alert(isLoggedIn);
+        function selectMovie(card) {
+            // console.log(isLoggedIn);
+            if (isLoggedIn != 'True') {
+                alert('You need to be logged in to add movies to favorites!');
+                console.log('You need to login')
+                return; // Stop the function if the user is not logged in
+            }   
+            
+            else{
+            // console.log(isLoggedIn)
+
+                var movieId = $(card).data('id');
+                var overlay = card.querySelector('.selected-overlay');
+                var isSelected = $(card).hasClass('selected');
+                
+                // Toggle the selected class and overlay display
+                $(card).toggleClass('selected');
+                overlay.style.display = isSelected ? "none" : "flex";
+
+                if (!isSelected) {
+                    $.ajax({
+                        url: '/select_movie',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ movie_id: movieId }),
+                        success: function(response) {
+                            console.log('Movie selected:', movieId);
+                            setTimeout(function() {
+                                overlay.style.display = "none";
+                                $(card).removeClass('selected'); // Remove the green border
+                            }, 500);
+                        }
+                    });
+                }
+            }
+        }
+
+        function showDetails(event, card) {
+            event.preventDefault();  // Prevent the default context menu
+            var movieId = $(card).data('id');
+            window.open('/movie/' + movieId, '_blank');  // Open the details page in a new tab
+        }
+
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        particlesJS('particles-js', {
+            "particles": {
+                "number": {
+                    "value": 80,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#ffffff"
+                },
+                "shape": {
+                    "type": "circle",
+                    "stroke": {
+                        "width": 0,
+                        "color": "#000000"
+                    },
+                    "polygon": {
+                        "nb_sides": 5
+                    },
+                    "image": {
+                        "src": "img/github.svg",
+                        "width": 100,
+                        "height": 100
+                    }
+                },
+                "opacity": {
+                    "value": 0.5,
+                    "random": false,
+                    "anim": {
+                        "enable": false,
+                        "speed": 1,
+                        "opacity_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "size": {
+                    "value": 3,
+                    "random": true,
+                    "anim": {
+                        "enable": false,
+                        "speed": 40,
+                        "size_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": false,
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 6,
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": {
+                        "enable": false,
+                        "rotateX": 600,
+                        "rotateY": 1200
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "repulse"
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    },
+                    "resize": true
+                },
+                "modes": {
+                    "grab": {
+                        "distance": 400,
+                        "line_linked": {
+                            "opacity": 1
+                        }
+                    },
+                    "bubble": {
+                        "distance": 400,
+                        "size": 40,
+                        "duration": 2,
+                        "opacity": 8,
+                        "speed": 3
+                    },
+                    "repulse": {
+                        "distance": 200,
+                        "duration": 0.4
+                    },
+                    "push": {
+                        "particles_nb": 4
+                    },
+                    "remove": {
+                        "particles_nb": 2
+                    }
+                }
+            },
+            "retina_detect": true
+        });
+    </script>
+
+</body>
+</html>

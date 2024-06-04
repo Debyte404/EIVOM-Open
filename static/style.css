@@ -1,0 +1,78 @@
+/* Add your base styles here */
+
+.navbar {
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 3;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+    /* border: 1px solid #eeff00; */
+    border-radius: 5px;
+}
+
+.dropbtn {
+    background-color: rgba(0, 0, 0, 0.114); /* Semi-transparent background */
+    backdrop-filter: blur(10px); /* Blur effect */
+    border: none;
+    cursor: pointer;
+    /* padding: 10px; */
+    border-radius: 5px;
+    
+}
+
+
+
+.menu-icon {
+    width:80px;
+    height: 65px;
+    /* margin-right: 8px; */
+    vertical-align: middle;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.114); /* Semi-transparent background */
+    backdrop-filter: blur(10px); /* Blur effect */
+    min-width: 80px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    /* border-radius: 5px; */
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom: 1px solid #eeff00;
+    /* border-right: 1px solid #eeff00; */
+    border-left: 1px solid #eeff00;
+    /* border-radius: 5px; */
+}
+
+.dropdown-content a {
+    /* color: black; */
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+    font-size:16px;
+    color: white;
+
+}
+
+
+.dropdown:hover .dropdown-content {
+    display: block;
+    border-left: 1px solid #eeff00;
+    /* border-right: 1px solid #eeff00; */
+    /* border-top: 1px solid #eeff00; */
+    border-bottom: 1px solid #eeff00;
+    border-radius: none;
+    
+    /* border-radius: 5px; */
+}
+
+/* Add other styles as needed */

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2dd3f0, #0717f8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .particles-js-canvas-el {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .login_form {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            text-align: center;
+            max-width: 300px;
+            width: 90%;
+            z-index: 1;
+        }
+
+        .login_form h1 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .login_form form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .login_form input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: none;
+            border-bottom: 2px solid #007BFF;
+            background-color: transparent;
+            outline: none;
+            font-size: 16px;
+            color: #333;
+            caret-color: #0717f8;
+        }
+
+        .login_form input::placeholder {
+            color: #aaa;
+        }
+
+        .login_form button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .login_form button:hover {
+            background-color: #0056b3;
+        }
+
+        .login_form .checkbox-group {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .login_form .checkbox-group input {
+            margin-right: 5px;
+            cursor: pointer;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+            border: 2px solid #007BFF;
+            background-color: transparent;
+            outline: none;
+        }
+
+        .login_form .checkbox-group input:checked {
+            background-color: #007BFF;
+        }
+
+        .login_form .checkbox-group label {
+            cursor: pointer;
+        }
+        
+		@media only screen and (max-width: 600px) {
+			.login_form {
+				max-width: 90%;
+				margin: 20px;
+				padding: 20px;
+			}
+			
+			.input-group {
+				margin-bottom: 15px;
+			}
+			
+			.login_form input {
+				font-size: 14px;
+			}
+		}
+
+		@media only screen and (max-width: 400px) {
+			.login_form {
+				margin: 20px;
+			}
+		}
+        
+        .flashy{
+            text-align: center;
+            position: fixed;
+            top: 7%;
+            /* margin-top:10px; */
+            color: red;
+            display: block;
+            border: 1px solid white;
+            border-radius: 5px;
+            background-color: rgba(62, 180, 115, 0.5);
+            backdrop-filter: blur(5px);
+            padding: 8px;
+        }
+    </style>
+
+</head>
+<body>
+
+
+    <div id="particles-js"></div>
+
+    {% with messages = get_flashed_messages(category_filter=["error","conflict"])%}
+        {% if messages%}
+            {% for message in messages%}
+            <p class="flashy">{{message}}</p>
+            {%endfor%}
+        {%endif%}
+    {%endwith%}
+
+    <div class="login_form">
+        <h1>Login</h1>
+        <form action="{{ url_for('login') }}" method="post">
+            <div class="input-group">
+                <input type="text" id="username" name="username" placeholder="Username" required>
+            </div>
+            <div class="input-group">
+                <input type="password" id="password" name="password" placeholder="Password" required>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="showPassword" onclick="togglePasswordVisibility()">
+                <label for="showPassword">Show Password</label>
+            </div>
+            <button type="submit">Login</button>
+            <br>
+            <spam>No account? Click to <a href="{{ url_for('register') }}" style="text-decoration: none;">Create</a></spam>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        particlesJS('particles-js', {
+            "particles": {
+                "number": {
+                    "value": 80,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#ffffff"
+                },
+                "shape": {
+                    "type": "circle",
+                    "stroke": {
+                        "width": 0,
+                        "color": "#000000"
+                    },
+                    "polygon": {
+                        "nb_sides": 5
+                    },
+                    "image": {
+                        "src": "img/github.svg",
+                        "width": 100,
+                        "height": 100
+                    }
+                },
+                "opacity": {
+                    "value": 0.5,
+                    "random": false,
+                    "anim": {
+                        "enable": false,
+                        "speed": 1,
+                        "opacity_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "size": {
+                    "value": 3,
+                    "random": true,
+                    "anim": {
+                        "enable": false,
+                        "speed": 40,
+                        "size_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": false,
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 6,
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": {
+                        "enable": false,
+                        "rotateX": 600,
+                        "rotateY": 1200
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "repulse"
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    },
+                    "resize": true
+                },
+                "modes": {
+                    "grab": {
+                        "distance": 400,
+                        "line_linked": {
+                            "opacity": 1
+                        }
+                    },
+                    "bubble": {
+                        "distance": 400,
+                        "size": 40,
+                        "duration": 2,
+                        "opacity": 8,
+                        "speed": 3
+                    },
+                    "repulse": {
+                        "distance": 200,
+                        "duration": 0.4
+                    },
+                    "push": {
+                        "particles_nb": 4
+                    },
+                    "remove": {
+                        "particles_nb": 2
+                    }
+                }
+            },
+            "retina_detect": true
+        });
+
+        function togglePasswordVisibility() {
+            var passwordInput = document.getElementById("password");
+            passwordInput.type = passwordInput.type === "password" ? "text" : "password";
+        }
+    </script>
+
+</body>
+</html>

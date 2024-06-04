@@ -1,0 +1,7 @@
+Flask
+Flask_Login
+Flask_PyMongo
+protobuf
+Requests
+Werkzeug
+google-generativeai
