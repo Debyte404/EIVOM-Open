@@ -50,7 +50,7 @@ def get_result(listA,listB):
     response = chat_session.send_message(f"list A : {listA}, list B: {listB}")
 
     print(model.count_tokens(chat_session.history))
-
+    print(response.text)
     return response.text
   except Exception as e:
      print(e)
