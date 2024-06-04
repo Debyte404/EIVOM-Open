@@ -2,7 +2,9 @@
 
 Welcome to **Eivom**, my first personal project! This website is a comprehensive movie database and recommendation platform built using a variety of technologies including Python, JavaScript, MongoDB Atlas, Gemini API, TMDB API, OMDB API, HTML, and CSS. 
 
-![Eivom Logo](https://via.placeholder.com/150)
+<div align="center">
+  <img src="static/favicon.ico" alt="Eivom Logo">
+</div>
 
 ## 🌟 Features
 
@@ -46,3 +48,7 @@ To explore Eivom, visit the website: [Eivom](https://eivom.vercel.app)
 ---
 
 Thank you for checking out my project! I hope you enjoy using Eivom as much as I enjoyed building it.
+
+<div align="center">
+  <img src="static/cat_ai.png" alt="Eivom Logo">
+</div>
