@@ -223,13 +223,14 @@ def recomend_res(listA):
     
     print(listB)
     
-    recommendations = loads(get_result(listA, listB))
-
+    recommendations = get_result(listA, listB)
+    
     print(recommendations)
 
     final_results = []
 
     if recommendations is not None:
+        recommendations = loads(recommendations)
         for rec in recommendations:
 
             url = f'http://www.omdbapi.com/?t={rec}&apikey={OMDB_API_KEY}'
