@@ -18,7 +18,7 @@ Eivom offers a range of features to enhance your movie-watching experience:
 - **❤️ Personal Movie List**: Add movies you like to your personal list.
 - **🔒 Secure Password Storage**: End-to-end hashing ensures your password is safe.
 - **📄 Movie Details Pages**: Get detailed information about each movie.
-- **🤖 AI-Generated Recommendations**: Receive personalized movie recommendations based on your preferences. The AI avoids duplicates and filters out movies already in your list.
+- **🤖 AI-Generated Recommendations** (Expired for now): Receive personalized movie recommendations based on your preferences. The AI avoids duplicates and filters out movies already in your list.
 
 ## 🛠️ Technology Stack
 
